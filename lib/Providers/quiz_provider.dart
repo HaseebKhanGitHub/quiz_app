@@ -62,4 +62,13 @@ class QuizProvider with ChangeNotifier {
     _selectedAnswers = List.filled(5, null);
     notifyListeners();
   }
+
+  void submitQuiz() {
+    // Only evaluate current answer once on Submit
+    if (_selectedAnswers[_currentIndex] ==
+        _questions[_currentIndex].correctIndex) {
+      _score++;
+    }
+    notifyListeners(); // don't increment index here
+  }
 }
