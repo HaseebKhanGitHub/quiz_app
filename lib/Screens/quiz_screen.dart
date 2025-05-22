@@ -18,7 +18,7 @@ class QuizScreen extends StatelessWidget {
       );
       return SizedBox(); // Or a loading indicator
     }
-    final currentQ = quiz.questions[quiz.currentIndex];
+    //final currentQ = quiz.questions[quiz.currentIndex];
 
     return Scaffold(
       appBar: AppBar(
@@ -84,10 +84,25 @@ class QuizScreen extends StatelessWidget {
                 if (quiz.currentIndex < 4) {
                   quiz.nextQuestion();
                 } else {
-                  quiz.nextQuestion();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => ResultScreen()),
+                  //quiz.nextQuestion();
+                  Navigator.of(context).pushReplacement(
+                    PageRouteBuilder(
+                      transitionDuration: Duration(milliseconds: 500),
+                      pageBuilder:
+                          (context, animation, secondaryAnimation) =>
+                              ResultScreen(),
+                      transitionsBuilder: (
+                        context,
+                        animation,
+                        secondaryAnimation,
+                        child,
+                      ) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        );
+                      },
+                    ),
                   );
                 }
               },

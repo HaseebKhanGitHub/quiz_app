@@ -3,8 +3,20 @@ import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import 'quiz_screen.dart';
 
-class ResultScreen extends StatelessWidget {
+class ResultScreen extends StatefulWidget {
   @override
+  State<ResultScreen> createState() => _ResultScreenState();
+}
+
+class _ResultScreenState extends State<ResultScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      Provider.of<QuizProvider>(context, listen: false).submitQuiz();
+    });
+  }
+
   Widget build(BuildContext context) {
     final quiz = Provider.of<QuizProvider>(context);
     final score = quiz.score;
@@ -54,9 +66,24 @@ class ResultScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   quiz.resetQuiz();
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => QuizScreen()),
+                  Navigator.of(context).pushReplacement(
+                    PageRouteBuilder(
+                      transitionDuration: Duration(milliseconds: 500),
+                      pageBuilder:
+                          (context, animation, secondaryAnimation) =>
+                              QuizScreen(),
+                      transitionsBuilder: (
+                        context,
+                        animation,
+                        secondaryAnimation,
+                        child,
+                      ) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        );
+                      },
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
